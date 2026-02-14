@@ -6,7 +6,7 @@ export default {
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
+		"./src/**/*.{ts,tsx}"
 	],
 	prefix: "",
 	theme: {
@@ -17,8 +17,22 @@ export default {
 				'2xl': '1400px'
 			}
 		},
+		fontFamily: {
+			sans: ['IBM Plex Sans', 'sans-serif'],
+			mono: ['IBM Plex Mono', 'monospace'],
+		},
 		extend: {
 			colors: {
+				scada: {
+					green: '#22c55e',
+					yellow: '#eab308',
+					red: '#ef4444',
+					blue: '#3b82f6',
+					bg: '#f0f4f8',
+					panel: '#ffffff',
+					dark: '#1e293b',
+					muted: '#64748b',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
