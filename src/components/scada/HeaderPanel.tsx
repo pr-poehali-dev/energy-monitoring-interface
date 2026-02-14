@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Icon from "@/components/ui/icon";
 
 interface HeaderPanelProps {
   systemStatus: "НОРМА" | "ПРЕДУПРЕЖДЕНИЕ" | "АВАРИЯ";
@@ -21,57 +20,29 @@ const HeaderPanel = ({ systemStatus }: HeaderPanelProps) => {
 
   const statusColor =
     systemStatus === "НОРМА"
-      ? "bg-scada-green"
-      : systemStatus === "ПРЕДУПРЕЖДЕНИЕ"
-        ? "bg-scada-yellow"
-        : "bg-scada-red animate-pulse";
-
-  const statusTextColor =
-    systemStatus === "НОРМА"
       ? "text-scada-green"
       : systemStatus === "ПРЕДУПРЕЖДЕНИЕ"
         ? "text-scada-yellow"
         : "text-scada-red animate-pulse";
 
   return (
-    <header className="bg-scada-dark text-white px-6 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <Icon name="Zap" size={24} className="text-scada-blue" />
-          <div>
-            <h1 className="text-lg font-bold tracking-tight leading-tight">ООО «Аква»</h1>
-            <p className="text-xs text-slate-400">АРМ энергомониторинга</p>
-          </div>
-        </div>
-        <div className="h-8 w-px bg-slate-600 mx-2" />
-        <div className="flex items-center gap-2 text-sm text-slate-300">
-          <Icon name="Users" size={16} />
-          <span>Смена: №2</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-slate-300">
-          <Icon name="User" size={16} />
-          <span>Иванов И.И.</span>
-        </div>
+    <header className="bg-scada-header border-b border-scada-border px-6 py-3 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <h1 className="text-xl font-bold text-white tracking-tight">ООО "Аква"</h1>
+        <span className="text-scada-border text-xl">|</span>
+        <span className="text-base font-semibold text-scada-blue">АРМ Энергомониторинга</span>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-4 text-sm font-mono">
-          <div className="flex items-center gap-2 text-slate-300">
-            <Icon name="Calendar" size={16} />
-            <span>{formatDate(time)}</span>
-          </div>
-          <div className="flex items-center gap-2 text-white text-base font-semibold">
-            <Icon name="Clock" size={16} />
-            <span>{formatTime(time)}</span>
-          </div>
-        </div>
-        <div className="h-8 w-px bg-slate-600" />
-        <div className="flex items-center gap-2">
-          <div className={`w-3 h-3 rounded-full ${statusColor}`} />
-          <span className={`text-sm font-bold ${statusTextColor}`}>
-            {systemStatus}
-          </span>
-        </div>
+      <div className="flex items-center gap-5 text-sm">
+        <span className="text-scada-muted">Смена: <span className="text-scada-text font-medium">№2</span></span>
+        <span className="text-scada-muted">|</span>
+        <span className="text-scada-muted">Оператор: <span className="text-scada-text font-medium">Иванов И.И.</span></span>
+        <span className="text-scada-muted">|</span>
+        <span className="text-scada-muted">Дата: <span className="text-scada-text font-medium">{formatDate(time)}</span></span>
+        <span className="text-scada-muted">|</span>
+        <span className="text-scada-muted">Время: <span className="text-white font-bold font-mono text-base">{formatTime(time)}</span></span>
+        <span className="text-scada-muted">|</span>
+        <span className="text-scada-muted">Статус: <span className={`font-bold text-base ${statusColor}`}>{systemStatus}</span></span>
       </div>
     </header>
   );

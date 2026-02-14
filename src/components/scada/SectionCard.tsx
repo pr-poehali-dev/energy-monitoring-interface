@@ -1,13 +1,11 @@
-import { useState } from "react";
-import Icon from "@/components/ui/icon";
-
 export interface SectionData {
   name: string;
   icon: string;
   power: number;
   current: number;
   cosPhi: number;
-  status: "Норма" | "Предупреждение" | "Повышенная нагрузка" | "Авария";
+  status: "Норма" | "Предупреждение" | "Перегрузка" | "Авария";
+  bgColor: string;
   history: number[];
 }
 
@@ -16,79 +14,56 @@ interface SectionCardProps {
 }
 
 const SectionCard = ({ data }: SectionCardProps) => {
-  const [expanded, setExpanded] = useState(false);
-
-  const statusConfig = {
-    "Норма": { color: "bg-scada-green", text: "text-scada-green", border: "border-scada-green" },
-    "Предупреждение": { color: "bg-scada-yellow", text: "text-scada-yellow", border: "border-scada-yellow" },
-    "Повышенная нагрузка": { color: "bg-scada-yellow", text: "text-scada-yellow", border: "border-scada-yellow" },
-    "Авария": { color: "bg-scada-red", text: "text-scada-red", border: "border-scada-red" },
+  const statusColors: Record<string, string> = {
+    "Норма": "bg-scada-green/20 text-scada-green border-scada-green/50",
+    "Предупреждение": "bg-scada-yellow/20 text-scada-yellow border-scada-yellow/50",
+    "Перегрузка": "bg-scada-red/20 text-scada-red border-scada-red/50",
+    "Авария": "bg-scada-red/30 text-scada-red border-scada-red/60",
   };
 
-  const cfg = statusConfig[data.status];
-
   const maxH = Math.max(...data.history, 1);
-  const sparkHeight = 40;
+  const sparkH = 40;
+  const sparkW = data.history.length - 1;
 
   return (
-    <div
-      className={`bg-white rounded-lg border-2 ${cfg.border} shadow-sm cursor-pointer transition-all hover:shadow-md`}
-      onClick={() => setExpanded(!expanded)}
-    >
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Icon name={data.icon} size={20} className="text-scada-dark" />
-            <h3 className="font-semibold text-scada-dark text-sm">{data.name}</h3>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className={`w-2.5 h-2.5 rounded-full ${cfg.color} ${data.status === "Авария" ? "animate-pulse" : ""}`} />
-            <span className={`text-xs font-medium ${cfg.text}`}>{data.status}</span>
-          </div>
-        </div>
+    <div className={`${data.bgColor} rounded-lg p-4 transition-all hover:brightness-110 cursor-pointer`}>
+      <h3 className="text-base font-bold text-white mb-3 text-center">{data.name}</h3>
 
-        <div className="grid grid-cols-3 gap-3 mb-3">
-          <div>
-            <p className="text-[10px] text-scada-muted uppercase">Мощность</p>
-            <p className="text-lg font-bold font-mono text-scada-dark">{data.power}<span className="text-xs text-scada-muted ml-1">кВт</span></p>
-          </div>
-          <div>
-            <p className="text-[10px] text-scada-muted uppercase">Ток</p>
-            <p className="text-lg font-bold font-mono text-scada-dark">{data.current}<span className="text-xs text-scada-muted ml-1">А</span></p>
-          </div>
-          <div>
-            <p className="text-[10px] text-scada-muted uppercase">cos φ</p>
-            <p className="text-lg font-bold font-mono text-scada-dark">{data.cosPhi}</p>
-          </div>
-        </div>
-
-        <div className="bg-slate-50 rounded p-2">
-          <svg width="100%" height={sparkHeight} viewBox={`0 0 ${data.history.length - 1} ${sparkHeight}`} preserveAspectRatio="none">
-            <polyline
-              fill="none"
-              stroke={data.status === "Норма" ? "#22c55e" : data.status === "Авария" ? "#ef4444" : "#eab308"}
-              strokeWidth="2"
-              points={data.history.map((v, i) => `${i},${sparkHeight - (v / maxH) * (sparkHeight - 4)}`).join(" ")}
-            />
-          </svg>
-          <p className="text-[10px] text-scada-muted mt-1">Последние 10 мин</p>
-        </div>
+      <div className="space-y-1 mb-3">
+        <p className="text-sm text-white/90">
+          Мощность: <span className="font-bold font-mono">{data.power} кВт</span>
+        </p>
+        <p className="text-sm text-white/90">
+          Ток: <span className="font-bold font-mono">{data.current} А</span>
+        </p>
       </div>
 
-      {expanded && (
-        <div className="border-t border-slate-100 p-4 bg-slate-50 rounded-b-lg">
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <p className="text-scada-muted text-xs">Среднее за смену</p>
-              <p className="font-mono font-semibold">{Math.round(data.history.reduce((a, b) => a + b, 0) / data.history.length)} кВт</p>
-            </div>
-            <div>
-              <p className="text-scada-muted text-xs">Максимум за смену</p>
-              <p className="font-mono font-semibold">{Math.max(...data.history)} кВт</p>
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="bg-black/15 rounded p-1.5 mb-3">
+        <svg width="100%" height={sparkH} viewBox={`0 0 ${sparkW} ${sparkH}`} preserveAspectRatio="none">
+          <defs>
+            <linearGradient id={`spark-${data.name}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+            </linearGradient>
+          </defs>
+          <polygon
+            fill={`url(#spark-${data.name})`}
+            points={`0,${sparkH} ${data.history.map((v, i) => `${i},${sparkH - (v / maxH) * (sparkH - 4)}`).join(" ")} ${sparkW},${sparkH}`}
+          />
+          <polyline
+            fill="none"
+            stroke="rgba(255,255,255,0.8)"
+            strokeWidth="2"
+            points={data.history.map((v, i) => `${i},${sparkH - (v / maxH) * (sparkH - 4)}`).join(" ")}
+          />
+        </svg>
+      </div>
+
+      <div className="flex justify-center">
+        <span className={`text-xs font-semibold px-3 py-1 rounded border ${statusColors[data.status]}`}>
+          {data.status === "Норма" ? "Норма" : `Статус: ${data.status}`}
+        </span>
+      </div>
     </div>
   );
 };

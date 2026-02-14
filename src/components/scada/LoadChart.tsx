@@ -6,7 +6,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
 
 interface LoadChartProps {
@@ -16,46 +15,43 @@ interface LoadChartProps {
 
 const LoadChart = ({ data, title }: LoadChartProps) => {
   return (
-    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
-      <h3 className="text-sm font-semibold text-scada-dark mb-4 flex items-center gap-2">
-        <span className="w-1 h-4 bg-scada-blue rounded-full inline-block" />
-        {title}
-      </h3>
-      <ResponsiveContainer width="100%" height={250}>
-        <LineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+    <div className="bg-scada-card rounded-lg border border-scada-border p-5">
+      <h3 className="text-base font-bold text-white mb-4">{title}</h3>
+      <ResponsiveContainer width="100%" height={220}>
+        <LineChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a3a6a" />
           <XAxis
             dataKey="time"
-            tick={{ fontSize: 11, fill: "#64748b", fontFamily: "IBM Plex Mono" }}
+            tick={{ fontSize: 10, fill: "#8896b3", fontFamily: "IBM Plex Mono" }}
             tickLine={false}
-            axisLine={{ stroke: "#e2e8f0" }}
+            axisLine={{ stroke: "#2a3a6a" }}
+            interval={3}
           />
           <YAxis
-            tick={{ fontSize: 11, fill: "#64748b", fontFamily: "IBM Plex Mono" }}
+            tick={{ fontSize: 10, fill: "#8896b3", fontFamily: "IBM Plex Mono" }}
             tickLine={false}
-            axisLine={{ stroke: "#e2e8f0" }}
-            unit=" кВт"
+            axisLine={{ stroke: "#2a3a6a" }}
+            tickFormatter={(v) => `${v} kW`}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#1e293b",
-              border: "none",
+              backgroundColor: "#0c1525",
+              border: "1px solid #2a3a6a",
               borderRadius: "8px",
-              color: "#fff",
+              color: "#e2e8f0",
               fontSize: "12px",
               fontFamily: "IBM Plex Mono",
             }}
             formatter={(val: number) => [`${val} кВт`, "Мощность"]}
+            labelStyle={{ color: "#8896b3" }}
           />
-          <ReferenceLine y={280} stroke="#ef4444" strokeDasharray="5 5" label={{ value: "Макс", fill: "#ef4444", fontSize: 11 }} />
-          <ReferenceLine y={200} stroke="#eab308" strokeDasharray="5 5" label={{ value: "Внимание", fill: "#eab308", fontSize: 11 }} />
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#3b82f6"
-            strokeWidth={2.5}
+            stroke="#60a5fa"
+            strokeWidth={2}
             dot={false}
-            activeDot={{ r: 4, fill: "#3b82f6" }}
+            activeDot={{ r: 4, fill: "#60a5fa", stroke: "#fff", strokeWidth: 2 }}
           />
         </LineChart>
       </ResponsiveContainer>

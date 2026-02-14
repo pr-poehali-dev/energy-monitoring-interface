@@ -1,42 +1,37 @@
-import Icon from "@/components/ui/icon";
-
 interface MetricCardProps {
   title: string;
   value: string | number;
   unit: string;
-  icon: string;
   status?: "green" | "yellow" | "red";
   subtitle?: string;
+  badge?: string;
 }
 
-const MetricCard = ({ title, value, unit, icon, status = "green", subtitle }: MetricCardProps) => {
-  const borderColor =
+const MetricCard = ({ title, value, unit, status = "green", subtitle, badge }: MetricCardProps) => {
+  const badgeColors =
     status === "green"
-      ? "border-l-scada-green"
+      ? "bg-scada-green/20 text-scada-green border-scada-green/40"
       : status === "yellow"
-        ? "border-l-scada-yellow"
-        : "border-l-scada-red";
-
-  const valueColor =
-    status === "green"
-      ? "text-scada-dark"
-      : status === "yellow"
-        ? "text-scada-yellow"
-        : "text-scada-red";
+        ? "bg-scada-yellow/20 text-scada-yellow border-scada-yellow/40"
+        : "bg-scada-red/20 text-scada-red border-scada-red/40";
 
   return (
-    <div className={`bg-white rounded-lg border border-slate-200 border-l-4 ${borderColor} p-5 shadow-sm`}>
-      <div className="flex items-center gap-2 mb-3">
-        <Icon name={icon} size={18} className="text-scada-muted" />
-        <p className="text-xs font-semibold text-scada-muted uppercase tracking-wider">{title}</p>
+    <div className="bg-scada-card rounded-lg border border-scada-border p-5 flex flex-col justify-between">
+      <p className="text-sm font-semibold text-scada-muted mb-3">{title}</p>
+      <div>
+        <div className="flex items-baseline gap-2">
+          <span className="text-4xl font-bold font-mono text-white">{value}</span>
+          <span className="text-base text-scada-muted">{unit}</span>
+        </div>
+        {badge && (
+          <span className={`inline-block mt-3 px-3 py-1 text-xs font-semibold rounded border ${badgeColors}`}>
+            {badge}
+          </span>
+        )}
+        {subtitle && (
+          <p className="text-xs text-scada-muted mt-2">{subtitle}</p>
+        )}
       </div>
-      <div className="flex items-baseline gap-2">
-        <span className={`text-3xl font-bold font-mono ${valueColor}`}>{value}</span>
-        <span className="text-sm text-scada-muted">{unit}</span>
-      </div>
-      {subtitle && (
-        <p className="text-xs text-scada-muted mt-2">{subtitle}</p>
-      )}
     </div>
   );
 };
